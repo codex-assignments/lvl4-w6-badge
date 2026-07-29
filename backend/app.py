@@ -6,7 +6,7 @@ from supabase import create_client, Client
 load_dotenv()
 app = Flask(__name__)
 # specify origin of frontend requests
-CORS(app)
+CORS(app, origins=[os.getenv("ORIGIN","http://localhost:*")])
 
 supabase: Client = create_client(
     os.getenv("SUPABASE_URL"),
@@ -23,8 +23,8 @@ def health():
 # read
 @app.get("/api/users")
 def get_resources():
-    res = supabase.table(TABLE).select("*").execute().data
-    return res, 200
+    res = supabase.table(TABLE).select("*").execute()
+    return res.data, 200
 
 # create
 @app.post("/api/users")
